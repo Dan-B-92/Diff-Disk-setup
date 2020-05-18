@@ -8,19 +8,19 @@
 	 Filename:     	
 	===========================================================================
 	.DESCRIPTION
-		A description of the file.
+		Quick stand up/tear down of HyperV VMs for lab purposes. Uses differencing disks. 
 #>
 
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
 [CmdletBinding]
 
-$VHDPath = "D:\Hyper-V\VHD"
-$VMPath = "D:\Hyper-V\VM"
-$ISOLocation = "X:\ISO\Windows_Server_2016_Datacenter_EVAL_en-us_14393_refresh.ISO"
-$SizeBytes = 30GB
-$VirtualSwitchName = "VSwitch1"
-$StartupMemory = 1GB
-$VMGeneration = 2
+$VHDPath = <#"VHDPATH"#>
+$VMPath = <#"VMPATH"#>
+$ISOPath = <#"ISOPath"#>
+$VHDSize = <#"VHD Size" (e.g. 50GB)#>
+$VirtualSwitchName = <#"Virtual Switch Name"#> 
+$StartupMemory = <#"Startup Memory" (e.g. 2GB)#>
+$VMGeneration = <#VM Generation (e.g. 2 (Recommended)#>
 
 
 
@@ -41,7 +41,7 @@ function Show-Menu
 
 do
 {
-	Show-Menu -Title "Restart VSS Writers"
+	Show-Menu -Title "Create VM"
 	$Selection = Read-Host "Select an option fron the list"
 	
 	switch ($Selection)
@@ -55,11 +55,11 @@ do
 				Generation		   = $VMGeneration
 				MemoryStartupBytes = $StartupMemory
 				NewVHDPath		   = $FullPVHDPath
-				NewVHDSizeBytes    = $SizeBytes
+				NewVHDSizeBytes    = $VHDSize
 				Switchname		   = $VirtualSwitchName
 			}
 			New-VM @ParentVMHash
-			Add-VMDvdDrive -VMName $PVMName -ControllerLocation 1 -Path $ISOLocation
+			Add-VMDvdDrive -VMName $PVMName -ControllerLocation 1 -Path $ISOPath
 			
 			
 		}'2'{
@@ -100,17 +100,7 @@ do
 			{
 				Continue
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+
 		
 	}'Q' {
 			return
