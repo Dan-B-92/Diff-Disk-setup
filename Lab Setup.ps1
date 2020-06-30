@@ -1,26 +1,21 @@
 ﻿<#	
-	.NOTES
-	===========================================================================
-	 Created with: 	SAPIEN Technologies, Inc., PowerShell Studio 2020 v5.7.172
-	 Created on:   	22/02/2020 15:50
-	 Created by:   	Dan
-	 Organization: 	
-	 Filename:     	
-	===========================================================================
+
 	.DESCRIPTION
 		Quick stand up/tear down of HyperV VMs for lab purposes. Uses differencing disks. 
 #>
 
+#test
+
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
 [CmdletBinding]
 
-$VHDPath = <#"VHDPATH"#>
-$VMPath = <#"VMPATH"#>
-$ISOPath = <#"ISOPath"#>
-$VHDSize = <#"VHD Size" (e.g. 50GB)#>
-$VirtualSwitchName = <#"Virtual Switch Name"#> 
-$StartupMemory = <#"Startup Memory" (e.g. 2GB)#>
-$VMGeneration = <#VM Generation (e.g. 2 (Recommended)#>
+$VHDPath = "X:\VHD"
+$VMPath = "X:\VM"
+$ISOPath = "X:\ISO"
+$VHDSize = 50GB
+$VirtualSwitchName = "VSwitch1" 
+$StartupMemory = 2GB
+$VMGeneration = 2
 
 
 
@@ -60,6 +55,7 @@ do
 			}
 			New-VM @ParentVMHash
 			Add-VMDvdDrive -VMName $PVMName -ControllerLocation 1 -Path $ISOPath
+            Write-Verbose "Parent VM Created, set this up before continuing if you wish to create child VMs"
 			
 			
 		}'2'{
